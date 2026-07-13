@@ -1,0 +1,5 @@
+cosign.key
+*.pem
+.env
+kubeconfig
+sbom-raw/
