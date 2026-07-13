@@ -1,17 +1,38 @@
 name: build-sign
 on: push
+
 permissions:
   contents: read
   packages: write
-  id-token: write
+  id-token: write   
+
 jobs:
   build-sign:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: sigstore/cosign-installer@v3
-      - name: LOG-IN into GHCR
-        run: echo${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      - run: docker build -t ghcr.io/${{ github.repository }}:${{ github.sha }} .
-      - run: docker push ghcr.io/${{ github.repository }}:${{ github.sha }}
-      - run: cosign sign --yes ghcr.io/${{ github.repository }}:${{ github.sha }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Docker image
+        run: 
+          IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/supply-chain-demo-app"
+          IMAGE_NAME=$(echo "$IMAGE_NAME" | tr '[:upper:]' '[:lower:]')
+          
+          docker build -t "$IMAGE_NAME:${{ github.sha }}" .
+          docker push "$IMAGE_NAME:${{ github.sha }}"
+          
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+
+      - name: Sign image (Keyless)
+        run: 
+          cosign sign --yes "${{ env.IMAGE_NAME }}:${{ github.sha }}"
