@@ -1,0 +1,17 @@
+name: build-sign
+on: push
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+jobs:
+  build-sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: sigstore/cosign-installer@v3
+      - name: LOG-IN into GHCR
+        run: echo${{secrets.GITHUB_TOKEN}} | docker login ghcr.io -u ${{github.actor}} --password-stdin
+      - run: docker build -t ghcr.io/${{github.repository}}:${{ github.sha }} .
+      - run: docker push ghcr.io/${{ github.repository }}:${{ github.sha }}
+      - run: cosign sign --yes ghcr.io/${{ github.repository }}:${{ github.sha }}
