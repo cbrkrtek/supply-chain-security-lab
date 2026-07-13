@@ -11,3 +11,4 @@ WORKDIR /app
 USER 1000
 ENV PATH=/home/appuser/.local/bin:$PATH
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["echo", "I am a malicious image!"]
