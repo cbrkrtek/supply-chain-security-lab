@@ -1,0 +1,27 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://github.com/cbrkrtek/supply-chain-security-lab/vex-2026-07-14",
+  "author": "cbrkrtek",
+  "role": "Project Maintainer",
+  "timestamp": "2026-07-14T00:00:00Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": { "name": "CVE-2023-50387" },
+      "products": [
+        { "@id": "ghcr.io/cbrkrtek/supply-chain-demo-app:v0.1.0" }
+      ],
+      "status": "under_investigation",
+      "action_statement": "High EPSS score (0.99995) indicates likely real-world exploitation. Investigating whether the affected component (DNSSEC resolver in base image) is reachable from the application's attack surface. Will update status once confirmed."
+    },
+    {
+      "vulnerability": { "name": "CVE-2018-20796" },
+      "products": [
+        { "@id": "ghcr.io/cbrkrtek/supply-chain-demo-app:v0.1.0" }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "action_statement": "Low EPSS (0.058) and Negligible severity. Vulnerable component is not invoked by the FastAPI application code. Accepted as low risk."
+    }
+  ]
+}
