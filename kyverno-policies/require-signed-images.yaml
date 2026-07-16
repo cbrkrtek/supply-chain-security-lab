@@ -1,0 +1,31 @@
+# require-signed-images.yaml
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-signed-images
+  annotations:
+    pod-policies.kyverno.io/autogen-controllers: none
+spec:
+  validationFailureAction: Enforce
+  background: false
+  webhookTimeoutSeconds: 30
+  rules:
+  - name: verify-cosign-signature
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - demo-app
+    verifyImages:
+    - imageReferences:
+      - "ghcr.io/cbrkrtek/supply-chain-demo-app*" 
+      attestors:
+      - entries:
+        - keys:
+            publicKeys: |-
+              -----BEGIN PUBLIC KEY-----
+              MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAExHJyJquOIpNqDbZPgIdx6e4PnzLZ
+              nOG3C86JpqHvXQWu7qmpqTC5DsoJFJMDCwD6cjyG8C5/MzPqVl5XEy/zQg==
+              -----END PUBLIC KEY-----
