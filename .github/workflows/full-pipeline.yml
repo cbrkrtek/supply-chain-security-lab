@@ -21,7 +21,7 @@ jobs:
         run: docker build -t ghcr.io/${{ github.repository }}:${{ env.IMAGE_TAG }} .
 
       - name: Install Trivy
-        uses: aquasecurity/setup-trivy@v0.2.0
+        uses: aquasecurity/setup-trivy@v0.2.6
 
       - name: Trivy scan (fail on CRITICAL)
         run: trivy image --exit-code 1 --severity CRITICAL ghcr.io/${{ github.repository }}:${{ env.IMAGE_TAG }}
