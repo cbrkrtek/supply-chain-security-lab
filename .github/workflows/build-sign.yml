@@ -1,5 +1,6 @@
 name: build-sign
-on: push
+on:
+  workflow_dispatch:
 
 permissions:
   contents: read
